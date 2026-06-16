@@ -1,0 +1,17 @@
+# Referencias (material de marca, no versionar)
+referencia/
+
+# Dependencias
+node_modules/
+
+# Build
+dist/
+
+# Logs / entorno
+*.log
+.env
+.env.*
+.DS_Store
+
+# Config local del editor
+.claude/

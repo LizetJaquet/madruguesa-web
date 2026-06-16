@@ -1,0 +1,284 @@
+/* =========================================================
+   LA MADRUGUESA — estilos propios (efectos neón, luna, menú)
+   Tailwind hace el grueso del layout; acá va lo que Tailwind
+   no resuelve con utilidades: glows, animaciones y la tarjeta lunar.
+   ========================================================= */
+
+:root {
+  --bg:        #07070c;
+  --bg-soft:   #0d0d16;
+  --panel:     #11111d;
+  --panel-2:   #161627;
+  --line:      rgba(255, 214, 10, 0.12);
+  --yellow:    #ffd60a;
+  --yellow-2:  #ffe14d;
+  --yellow-dim:#8a7412;
+  --violet:    #a78bff;
+  --violet-2:  #7b61ff;
+  --text:      #f4f1e9;
+  --muted:     #9b97ad;
+}
+
+html { scroll-behavior: smooth; }
+body  { background: var(--bg); color: var(--text); }
+
+/* Fondo de toda la página: degradado nocturno + estrellas sutiles */
+.night-bg {
+  background:
+    radial-gradient(900px 500px at 80% -10%, rgba(123, 97, 255, 0.10), transparent 60%),
+    radial-gradient(1100px 600px at 10% 0%,  rgba(255, 214, 10, 0.06), transparent 55%),
+    linear-gradient(180deg, #07070c 0%, #08080f 40%, #07070c 100%);
+}
+
+/* Ruido/grano tenue para textura de noche */
+.grain::after {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  opacity: .035;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Tipografía display + neón ---------- */
+.font-display { font-family: 'Anton', system-ui, sans-serif; letter-spacing: .01em; }
+.font-cond    { font-family: 'Oswald', system-ui, sans-serif; }
+
+.neon {
+  color: var(--yellow-2);
+  text-shadow:
+    0 0 4px rgba(255, 225, 77, .55),
+    0 0 12px rgba(255, 214, 10, .45),
+    0 0 32px rgba(255, 214, 10, .28),
+    0 0 70px rgba(255, 198, 0, .18);
+}
+.neon-soft {
+  color: var(--yellow-2);
+  text-shadow: 0 0 6px rgba(255, 214, 10, .35), 0 0 18px rgba(255, 214, 10, .2);
+}
+.neon-violet {
+  color: var(--violet);
+  text-shadow: 0 0 6px rgba(167, 139, 255, .45), 0 0 20px rgba(123, 97, 255, .3);
+}
+
+/* Parpadeo sutil tipo cartel de neón (solo una vez, sin marear) */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: .55; }
+  94% { opacity: 1; }
+  96% { opacity: .7; }
+  97% { opacity: 1; }
+}
+.flicker { animation: flicker 6s infinite steps(1); }
+
+/* ---------- Luna del hero ---------- */
+.moon {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #fff7d6 0%, #ffe14d 35%, #f5c200 70%, #b88a00 100%);
+  box-shadow:
+    0 0 30px rgba(255, 214, 10, .45),
+    0 0 90px rgba(255, 214, 10, .35),
+    0 0 180px rgba(255, 198, 0, .25),
+    inset -18px -14px 40px rgba(120, 80, 0, .55);
+}
+.moon-glow { filter: blur(2px); }
+
+/* Luna fotográfica del hero (PNG/WebP con alpha) */
+.moon-img {
+  filter:
+    drop-shadow(0 0 24px rgba(255, 214, 10, .35))
+    drop-shadow(0 0 70px rgba(255, 214, 10, .25))
+    drop-shadow(0 0 140px rgba(167, 139, 255, .18));
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+.float { animation: float 7s ease-in-out infinite; }
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-weight: 600; border-radius: 9999px;
+  padding: .8rem 1.5rem; transition: all .2s ease;
+  white-space: nowrap;
+}
+.btn-neon {
+  background: linear-gradient(180deg, var(--yellow-2), var(--yellow));
+  color: #1a1500;
+  box-shadow: 0 0 0 1px rgba(255,214,10,.4), 0 8px 30px -8px rgba(255,214,10,.6);
+}
+.btn-neon:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(255,214,10,.7), 0 12px 36px -8px rgba(255,214,10,.8); }
+.btn-ghost {
+  border: 1px solid rgba(255,214,10,.35); color: var(--yellow-2);
+  background: rgba(255,214,10,.03);
+}
+.btn-ghost:hover { background: rgba(255,214,10,.1); border-color: rgba(255,214,10,.6); }
+.btn-wa {
+  background: #1faa54; color: #fff;
+  box-shadow: 0 8px 30px -10px rgba(31,170,84,.8);
+}
+.btn-wa:hover { background: #25c264; transform: translateY(-2px); }
+
+/* ---------- Tarjetas / paneles ---------- */
+.panel {
+  background: linear-gradient(180deg, var(--panel) 0%, var(--bg-soft) 100%);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+}
+.panel-hover { transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.panel-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,214,10,.35);
+  box-shadow: 0 20px 50px -25px rgba(255,214,10,.4);
+}
+
+.chip {
+  font-size: .68rem; letter-spacing: .14em; text-transform: uppercase;
+  padding: .25rem .6rem; border-radius: 9999px; font-weight: 600;
+}
+
+.section-kicker {
+  letter-spacing: .35em; text-transform: uppercase;
+  font-size: .72rem; color: var(--violet);
+}
+
+/* ---------- Menú: miniaturas de productos ---------- */
+.burger-thumb {
+  flex-shrink: 0;
+  width: 5.5rem; height: 5.5rem;
+  border-radius: 9999px; object-fit: cover;
+  background: #0a0a10;
+  border: 1px solid rgba(255, 214, 10, .28);
+  box-shadow: 0 0 22px -6px rgba(255, 214, 10, .55), inset 0 0 0 2px rgba(0,0,0,.4);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.burger-thumb:hover {
+  transform: scale(1.06) rotate(-2deg);
+  box-shadow: 0 0 30px -4px rgba(255, 214, 10, .8);
+}
+.side-thumb {
+  flex-shrink: 0;
+  width: 3.25rem; height: 3.25rem;
+  border-radius: 9999px; object-fit: cover;
+  background: #0a0a10;
+  border: 1px solid rgba(255, 214, 10, .22);
+  box-shadow: 0 0 14px -6px rgba(255, 214, 10, .5);
+  transition: transform .25s ease;
+}
+.side-thumb:hover { transform: scale(1.08); }
+
+/* ---------- Menú: líneas punteadas hacia el precio ---------- */
+.menu-row { display: flex; align-items: baseline; gap: .35rem; }
+.menu-row .leader {
+  flex: 1 1 auto; height: 0;
+  border-bottom: 1px dotted rgba(255, 214, 10, .28);
+  transform: translateY(-.32em);
+}
+.menu-row .price { color: var(--yellow-2); font-weight: 700; white-space: nowrap; }
+
+/* ---------- Club de los Desvelados: tarjeta lunar ---------- */
+.loyalty-card {
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(123,97,255,.18), transparent 55%),
+    linear-gradient(160deg, #14142a 0%, #0c0c18 60%, #100c06 100%);
+  border: 1px solid rgba(255,214,10,.18);
+  border-radius: 1.5rem;
+  box-shadow: 0 30px 70px -30px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Cada sello es una luna que se "enciende" */
+.stamp {
+  position: relative;
+  width: 100%; aspect-ratio: 1 / 1; border-radius: 50%;
+  display: grid; place-items: center;
+  transition: all .45s cubic-bezier(.2,.8,.2,1);
+}
+.stamp-off {
+  background: radial-gradient(circle at 38% 32%, #20202f, #0c0c14 75%);
+  border: 1px dashed rgba(255,214,10,.22);
+  color: rgba(255,255,255,.25);
+}
+.stamp-on {
+  background: radial-gradient(circle at 35% 30%, #fff7d6 0%, #ffe14d 40%, #f5c200 75%, #c79400 100%);
+  border: 1px solid rgba(255,214,10,.6);
+  color: #1a1500;
+  box-shadow: 0 0 14px rgba(255,214,10,.55), 0 0 34px rgba(255,214,10,.3),
+              inset -6px -5px 14px rgba(120,80,0,.5);
+}
+.stamp-reward {
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #ffe14d 45%, #ff9d00 100%);
+  border: 1px solid #fff;
+  color: #1a1500;
+  box-shadow: 0 0 22px rgba(255,214,10,.8), 0 0 60px rgba(255,160,0,.55);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); box-shadow: 0 0 22px rgba(255,214,10,.8), 0 0 60px rgba(255,160,0,.5); }
+  50%     { transform: scale(1.06); box-shadow: 0 0 34px rgba(255,214,10,1), 0 0 90px rgba(255,160,0,.7); }
+}
+
+/* Sellos como fases de la luna */
+.phase-slot {
+  position: relative;
+  width: 100%; aspect-ratio: 1 / 1; border-radius: 50%;
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 38% 32%, #181826, #0a0a12 78%);
+  transition: all .45s cubic-bezier(.2,.8,.2,1);
+}
+.phase-moon { width: 80%; height: 80%; line-height: 0; }
+.phase-moon svg { width: 100%; height: 100%; display: block; }
+
+.phase-off {
+  border: 1px dashed rgba(255, 214, 10, .18);
+}
+.phase-off .phase-moon {                /* fase aún no ganada: luna tenue y grisácea */
+  filter: brightness(.4) grayscale(.5);
+  opacity: .6;
+}
+.phase-on {                             /* fase ganada: luna a brillo pleno con halo neón */
+  border: 1px solid rgba(255, 214, 10, .55);
+  box-shadow: 0 0 14px rgba(255, 214, 10, .4), inset 0 0 10px rgba(255,214,10,.08);
+}
+.phase-on .phase-moon {
+  filter: drop-shadow(0 0 5px rgba(255, 214, 10, .5)) saturate(1.05) brightness(1.05);
+}
+
+.phase-reward {
+  color: #1a1500;
+  border: 1px solid #fff;
+  box-shadow: 0 0 22px rgba(255, 214, 10, .85), 0 0 60px rgba(255, 160, 0, .55);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+.phase-reward .phase-moon { position: absolute; inset: 10%; width: 80%; height: 80%; }
+.phase-gift {
+  position: relative; z-index: 2;
+  font-size: .8rem; font-weight: 800; letter-spacing: .02em;
+}
+
+/* Barra de progreso lunar */
+.progress-track { background: rgba(255,255,255,.07); border-radius: 9999px; overflow: hidden; }
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--yellow), var(--yellow-2));
+  box-shadow: 0 0 12px rgba(255,214,10,.6);
+  transition: width .45s cubic-bezier(.2,.8,.2,1);
+}
+
+/* Indicador de Hora Lunática */
+.dot-live { width: .55rem; height: .55rem; border-radius: 50%; }
+.dot-on  { background: #2ec27a; box-shadow: 0 0 10px #2ec27a; animation: blink 1.4s infinite; }
+.dot-off { background: #6b6b7a; }
+@keyframes blink { 50% { opacity: .35; } }
+
+/* Divisor con luna */
+.hr-moon { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,214,10,.3), transparent); }
+
+/* Respeta usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .flicker, .float, .stamp-reward, .dot-on, .moon { animation: none !important; }
+  html { scroll-behavior: auto; }
+}

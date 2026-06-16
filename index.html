@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>La Madruguesa · El antojo no duerme</title>
+  <meta name="description" content="Hamburguesería artesanal nocturna. Abierta de 20:00 a 04:00. La mejor hamburguesa artesanal, justo cuando más la necesitás." />
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink:    '#07070c',
+            night:  '#0d0d16',
+            panel:  '#11111d',
+            yellow: { DEFAULT: '#ffd60a', soft: '#ffe14d', dim: '#8a7412' },
+            violet: { DEFAULT: '#a78bff', deep: '#7b61ff' },
+            muted:  '#9b97ad',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="assets/css/styles.css?v=3" />
+
+  <!-- Lógica + Alpine (app.js antes de Alpine para registrar los componentes) -->
+  <script defer src="assets/js/app.js?v=4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body class="night-bg grain font-sans antialiased selection:bg-yellow selection:text-ink">
+
+  <!-- ===================== HEADER ===================== -->
+  <header x-data="nav" x-init="init()"
+          :class="scrolled ? 'bg-ink/85 backdrop-blur-md border-b border-yellow/10' : 'bg-transparent'"
+          class="fixed inset-x-0 top-0 z-50 transition-colors duration-300">
+    <nav class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <!-- Logo -->
+        <a href="#inicio" class="flex shrink-0 items-center gap-2">
+          <span class="text-2xl">🌙</span>
+          <span class="font-display whitespace-nowrap text-xl tracking-wide neon-soft">LA MADRUGUESA</span>
+        </a>
+
+        <!-- Links desktop -->
+        <div class="hidden items-center gap-5 lg:gap-7 md:flex">
+          <a href="#menu"  class="text-sm text-muted transition hover:text-yellow-soft">Menú</a>
+          <a href="#club"  class="text-sm text-muted transition hover:text-yellow-soft">Club de los Desvelados</a>
+          <a href="#reto"  class="text-sm text-muted transition hover:text-yellow-soft">El Reto</a>
+          <a href="#donde" class="text-sm text-muted transition hover:text-yellow-soft">Dónde estamos</a>
+          <a href="https://wa.me/5491112345678?text=Hola!%20Quiero%20hacer%20un%20pre-pedido%20en%20La%20Madruguesa"
+             target="_blank" rel="noopener" class="btn btn-wa text-sm">
+            <span>📲</span> Pre-pedir
+          </a>
+        </div>
+
+        <!-- Toggle mobile -->
+        <button @click="open = !open" class="md:hidden text-yellow-soft p-2" aria-label="Abrir menú">
+          <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg x-show="open" x-cloak xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Menú mobile -->
+    <div x-show="open" x-cloak x-transition class="md:hidden border-t border-yellow/10 bg-ink/95 backdrop-blur-md">
+      <div class="space-y-1 px-5 py-4">
+        <a @click="go()" href="#menu"  class="block py-2 text-muted hover:text-yellow-soft">Menú</a>
+        <a @click="go()" href="#club"  class="block py-2 text-muted hover:text-yellow-soft">Club de los Desvelados</a>
+        <a @click="go()" href="#reto"  class="block py-2 text-muted hover:text-yellow-soft">El Reto</a>
+        <a @click="go()" href="#donde" class="block py-2 text-muted hover:text-yellow-soft">Dónde estamos</a>
+        <a @click="go()" href="https://wa.me/5491112345678" target="_blank" rel="noopener" class="btn btn-wa mt-2 w-full justify-center">📲 Pre-pedir por WhatsApp</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section id="inicio" class="relative overflow-hidden pt-28 pb-20 lg:pt-40 lg:pb-28">
+    <!-- Luna decorativa -->
+    <div class="pointer-events-none absolute -right-10 top-24 hidden lg:block">
+      <img src="assets/img/luna.webp" alt="Luna" class="moon-img float h-64 w-64 xl:h-80 xl:w-80">
+    </div>
+    <!-- Barra de estado en vivo -->
+    <div x-data="lunatic" x-init="init()" class="mx-auto mb-10 flex max-w-7xl items-center justify-center px-5">
+      <div class="panel flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-5 py-2 text-xs sm:text-sm">
+        <span class="flex items-center gap-2">
+          <span class="dot-live" :class="active ? 'dot-on' : 'dot-off'"></span>
+          <span class="text-muted" x-text="statusText"></span>
+        </span>
+        <span class="hidden text-yellow-dim sm:inline">·</span>
+        <span class="font-cond tabular-nums text-yellow-soft" x-text="time"></span>
+      </div>
+    </div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-5 text-center lg:px-8">
+      <p class="section-kicker mb-5 flicker">★ Hamburguesería artesanal nocturna ★</p>
+      <h1 class="font-display text-6xl leading-[0.9] sm:text-7xl lg:text-8xl xl:text-9xl">
+        <span class="block neon">LA</span>
+        <span class="block neon">MADRUGUESA</span>
+      </h1>
+      <p class="mt-6 text-lg text-muted sm:text-xl">El antojo no duerme.</p>
+      <p class="mx-auto mt-3 max-w-xl text-sm text-muted/80 sm:text-base">
+        La mejor hamburguesa artesanal de la zona, justo cuando todos los demás ya cerraron.
+        <span class="text-yellow-soft">Carne 100% de res molida en casa</span>, pan brioche del día y salsas propias.
+      </p>
+
+      <!-- CTAs -->
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <a href="#menu" class="btn btn-neon">Ver el menú</a>
+        <a href="https://wa.me/5491112345678?text=Hola!%20Quiero%20hacer%20un%20pre-pedido"
+           target="_blank" rel="noopener" class="btn btn-wa">📲 Pre-pedir por WhatsApp</a>
+        <a href="#club" class="btn btn-ghost">Club de los Desvelados</a>
+      </div>
+
+      <!-- Mini features -->
+      <div class="mx-auto mt-14 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4">
+        <div class="panel px-4 py-4">
+          <p class="font-display text-2xl neon-soft">20→04</p>
+          <p class="mt-1 text-xs text-muted">Abierto todas las noches</p>
+        </div>
+        <div class="panel px-4 py-4">
+          <p class="font-display text-2xl neon-soft">10 min</p>
+          <p class="mt-1 text-xs text-muted">Garantía: si tardamos, las papas van gratis</p>
+        </div>
+        <div class="panel px-4 py-4">
+          <p class="font-display text-2xl neon-soft">6</p>
+          <p class="mt-1 text-xs text-muted">Burgers, elegidas. Sin vueltas</p>
+        </div>
+        <div class="panel px-4 py-4">
+          <p class="font-display text-2xl neon-soft">100%</p>
+          <p class="mt-1 text-xs text-muted">Artesanal, a la misma hora que a las 3 AM</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MENÚ ===================== -->
+  <section id="menu" class="relative z-10 mx-auto max-w-6xl px-5 py-20 lg:px-8 lg:py-28">
+    <div class="mb-12 text-center">
+      <p class="section-kicker">El menú</p>
+      <h2 class="mt-3 font-display text-4xl sm:text-5xl lg:text-6xl"><span class="neon-soft">LAS BURGERS</span></h2>
+      <p class="mx-auto mt-3 max-w-lg text-sm text-muted">Seis hamburguesas, ni una de más. Menos opciones, salida más rápida y casi cero errores.</p>
+    </div>
+
+    <!-- Burgers -->
+    <div class="grid gap-x-12 gap-y-7 md:grid-cols-2">
+      <!-- 1 -->
+      <article class="flex items-start gap-4">
+        <img src="assets/img/trasnochada.jpg" alt="La Trasnochada" loading="lazy" class="burger-thumb">
+        <div class="min-w-0 flex-1">
+          <div class="menu-row">
+            <h3 class="font-cond text-xl font-700">La Trasnochada
+              <span class="ml-1 align-middle text-yellow">★</span>
+              <span class="chip ml-2 bg-yellow/15 text-yellow-soft">La insignia</span>
+            </h3>
+            <span class="leader"></span>
+            <span class="price">$8.900</span>
+          </div>
+          <p class="mt-1 text-sm text-muted">Doble smash, queso americano, cebolla caramelizada, tocino crujiente y nuestra Salsa Lunar.</p>
+        </div>
+      </article>
+      <!-- 2 -->
+      <article class="flex items-start gap-4">
+        <img src="assets/img/la-3am.jpg" alt="La 3 AM" loading="lazy" class="burger-thumb">
+        <div class="min-w-0 flex-1">
+          <div class="menu-row">
+            <h3 class="font-cond text-xl font-700">La 3 AM</h3>
+            <span class="leader"></span>
+            <span class="price">$8.400</span>
+          </div>
+          <p class="mt-1 text-sm text-muted">Doble carne, doble cheddar, pepinillos y mostaza dulce. Directa y sin rodeos.</p>
+        </div>
+      </article>
+      <!-- 3 -->
+      <article class="flex items-start gap-4">
+        <img src="assets/img/insomne.jpg" alt="La Insomne" loading="lazy" class="burger-thumb">
+        <div class="min-w-0 flex-1">
+          <div class="menu-row">
+            <h3 class="font-cond text-xl font-700">La Insomne <span class="ml-1">🌶️</span></h3>
+            <span class="leader"></span>
+            <span class="price">$8.700</span>
+          </div>
+          <p class="mt-1 text-sm text-muted">Carne con costra de pimienta, jalapeños tatemados, queso pepper jack y mayo de chipotle.</p>
+        </div>
+      </article>
+      <!-- 4 -->
+      <article class="flex items-start gap-4">
+        <img src="assets/img/luna-llena.jpg" alt="La Luna Llena" loading="lazy" class="burger-thumb">
+        <div class="min-w-0 flex-1">
+          <div class="menu-row">
+            <h3 class="font-cond text-xl font-700">La Luna Llena
+              <span class="chip ml-2 bg-violet/15 text-violet">La más grande</span>
+            </h3>
+            <span class="leader"></span>
+            <span class="price">$10.900</span>
+          </div>
+          <p class="mt-1 text-sm text-muted">Triple carne, tres quesos, aros de cebolla dentro y BBQ ahumada. La más grande del menú.</p>
+        </div>
+      </article>
+      <!-- 5 -->
+      <article class="flex items-start gap-4">
+        <img src="assets/img/desvelo.jpg" alt="El Desvelo" loading="lazy" class="burger-thumb">
+        <div class="min-w-0 flex-1">
+          <div class="menu-row">
+            <h3 class="font-cond text-xl font-700">El Desvelo</h3>
+            <span class="leader"></span>
+            <span class="price">$9.200</span>
+          </div>
+          <p class="mt-1 text-sm text-muted">Carne, tocino, huevo estrellado, queso manchego y salsa holandesa. La favorita post-fiesta.</p>
+        </div>
+      </article>
+      <!-- 6 -->
+      <article class="flex items-start gap-4">
+        <img src="assets/img/eclipse.jpg?v=3" alt="La Eclipse" loading="lazy" class="burger-thumb">
+        <div class="min-w-0 flex-1">
+          <div class="menu-row">
+            <h3 class="font-cond text-xl font-700">La Eclipse <span class="ml-1">🌱</span></h3>
+            <span class="leader"></span>
+            <span class="price">$8.500</span>
+          </div>
+          <p class="mt-1 text-sm text-muted">Portobello a la parrilla o medallón plant-based, queso de cabra, arúgula y cebolla encurtida.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="hr-moon my-14"></div>
+
+    <!-- Para acompañar / Bebidas / El Final -->
+    <div class="grid gap-12 md:grid-cols-3">
+      <!-- Acompañar -->
+      <div>
+        <h3 class="mb-5 font-display text-2xl"><span class="text-yellow">🍟</span> <span class="neon-soft">PARA ACOMPAÑAR</span></h3>
+        <div class="space-y-5">
+          <div class="flex items-start gap-3">
+            <img src="assets/img/papas-medianoche.jpg" alt="Papas Medianoche" loading="lazy" class="side-thumb">
+            <div class="min-w-0 flex-1">
+              <div class="menu-row"><span class="font-cond font-600">Papas Medianoche</span><span class="leader"></span><span class="price">$3.500</span></div>
+              <p class="mt-0.5 text-xs text-muted">Gajos con paprika ahumada y alioli negro.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <img src="assets/img/papas-desveladas.jpg" alt="Papas Desveladas" loading="lazy" class="side-thumb">
+            <div class="min-w-0 flex-1">
+              <div class="menu-row"><span class="font-cond font-600">Papas Desveladas</span><span class="leader"></span><span class="price">$4.200</span></div>
+              <p class="mt-0.5 text-xs text-muted">Con queso fundido, tocino y jalapeño.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <img src="assets/img/anillos-saturno.jpg" alt="Anillos de Saturno" loading="lazy" class="side-thumb">
+            <div class="min-w-0 flex-1">
+              <div class="menu-row"><span class="font-cond font-600">Anillos de Saturno</span><span class="leader"></span><span class="price">$3.800</span></div>
+              <p class="mt-0.5 text-xs text-muted">Aros de cebolla crocantes.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bebidas -->
+      <div>
+        <h3 class="mb-5 font-display text-2xl"><span class="text-yellow">🥤</span> <span class="neon-soft">BEBIDAS</span></h3>
+        <div class="space-y-5">
+          <div class="flex items-start gap-3">
+            <img src="assets/img/malteada.jpg" alt="Malteadas" loading="lazy" class="side-thumb">
+            <div class="min-w-0 flex-1">
+              <div class="menu-row"><span class="font-cond font-600">Malteadas</span><span class="leader"></span><span class="price">$4.500</span></div>
+              <p class="mt-0.5 text-xs text-muted">Vainilla, chocolate "Cielo Negro" o fresa.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <img src="assets/img/limonada.jpg" alt="Limonada Negra" loading="lazy" class="side-thumb">
+            <div class="min-w-0 flex-1">
+              <div class="menu-row"><span class="font-cond font-600">Limonada Negra</span><span class="leader"></span><span class="price">$3.200</span></div>
+              <p class="mt-0.5 text-xs text-muted">Con carbón activado.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <img src="assets/img/cerveza.jpg" alt="Cerveza artesanal" loading="lazy" class="side-thumb">
+            <div class="min-w-0 flex-1">
+              <div class="menu-row"><span class="font-cond font-600">Cerveza artesanal</span><span class="leader"></span><span class="price">$3.900</span></div>
+              <p class="mt-0.5 text-xs text-muted">Rotativa, de productores locales.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <img src="assets/img/cafe.jpg" alt="Café Gasolina" loading="lazy" class="side-thumb">
+            <div class="min-w-0 flex-1">
+              <div class="menu-row"><span class="font-cond font-600">Café "Gasolina"</span><span class="leader"></span><span class="price">$2.500</span></div>
+              <p class="mt-0.5 text-xs text-muted">Para los que aún les falta noche.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- El Final -->
+      <div>
+        <h3 class="mb-5 font-display text-2xl"><span class="text-yellow">🍰</span> <span class="neon-soft">EL FINAL</span></h3>
+        <div class="space-y-5">
+          <div class="flex items-start gap-3">
+            <img src="assets/img/brownie.jpg" alt="Brownie Eclipse" loading="lazy" class="side-thumb">
+            <div class="min-w-0 flex-1">
+              <div class="menu-row"><span class="font-cond font-600">Brownie Eclipse</span><span class="leader"></span><span class="price">$4.000</span></div>
+              <p class="mt-0.5 text-xs text-muted">Con helado y caramelo salado.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <img src="assets/img/pan-dormido.jpg" alt="Pan Dormido" loading="lazy" class="side-thumb">
+            <div class="min-w-0 flex-1">
+              <div class="menu-row"><span class="font-cond font-600">Pan Dormido</span><span class="leader"></span><span class="price">$3.800</span></div>
+              <p class="mt-0.5 text-xs text-muted">Brioche tostado con helado de vainilla.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CLUB DE LOS DESVELADOS ===================== -->
+  <section id="club" class="relative z-10 border-y border-yellow/10 bg-night/40 py-20 lg:py-28">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="mb-12 text-center">
+        <p class="section-kicker">Fidelización</p>
+        <h2 class="mt-3 font-display text-4xl sm:text-5xl lg:text-6xl">
+          <span class="neon-soft">CLUB DE LOS DESVELADOS</span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-xl text-sm text-muted">
+          Sumá un sello con cada compra. Completá el ciclo lunar y la <span class="text-yellow-soft">6ª hamburguesa es gratis</span>.
+          Acá es donde la noche te devuelve el favor.
+        </p>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-2 lg:items-center">
+        <!-- Tarjeta lunar interactiva -->
+        <div x-data="loyalty" class="loyalty-card p-7 sm:p-9">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="font-display text-xl neon-soft">🌙 Tu tarjeta</p>
+              <p class="text-xs text-muted">Club de los Desvelados · Socio #00427</p>
+            </div>
+            <span class="chip bg-violet/15 text-violet">Demo interactiva</span>
+          </div>
+
+          <!-- Sellos = fases de la luna -->
+          <div class="my-8 grid grid-cols-6 gap-2 sm:gap-3">
+            <template x-for="i in max" :key="i">
+              <div class="phase-slot" :class="isOn(i) ? 'phase-on' : 'phase-off'" :title="'Sello '+i">
+                <div class="phase-moon" x-html="phaseSvg(i-1)"></div>
+              </div>
+            </template>
+            <!-- 6º = recompensa: luna llena gratis -->
+            <div class="phase-slot" :class="unlocked ? 'phase-reward' : 'phase-off'" title="6ª hamburguesa gratis">
+              <div class="phase-moon" x-show="unlocked" x-cloak x-html="phaseSvg(4)"></div>
+              <span class="phase-gift" :class="unlocked ? 'text-ink' : 'text-yellow-soft/70'" x-text="unlocked ? '★' : '6ª'"></span>
+            </div>
+          </div>
+
+          <!-- Progreso -->
+          <div class="progress-track h-2">
+            <div class="progress-fill" :style="`width: ${percent}%`"></div>
+          </div>
+          <p class="mt-3 text-sm" :class="unlocked ? 'text-yellow-soft font-600' : 'text-muted'" x-text="label()"></p>
+
+          <!-- Acciones demo -->
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button @click="add()" x-show="!unlocked" class="btn btn-neon text-sm">+ Sumar sello</button>
+            <button @click="redeem()" x-show="unlocked" x-cloak class="btn btn-neon text-sm">🍔 Canjear hamburguesa gratis</button>
+            <button @click="redeem()" class="btn btn-ghost text-sm">Reiniciar</button>
+          </div>
+
+          <p x-show="justUnlocked" x-cloak x-transition class="mt-4 text-center text-sm font-600 neon-soft">
+            🌕 ¡Completaste el ciclo lunar! Tu próxima hamburguesa va por la casa.
+          </p>
+        </div>
+
+        <!-- Cómo funciona -->
+        <div class="space-y-4">
+          <div class="panel panel-hover p-5">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">📲</span>
+              <h3 class="font-cond text-lg font-600">Te identificás con tu teléfono</h3>
+            </div>
+            <p class="mt-2 text-sm text-muted">Sin apps ni plásticos que perder. Decís tu número en la caja o lo pasás en el pre-pedido por WhatsApp, y el sello se carga solo.</p>
+          </div>
+          <div class="panel panel-hover p-5">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">🌒</span>
+              <h3 class="font-cond text-lg font-600">Cada compra enciende una luna</h3>
+            </div>
+            <p class="mt-2 text-sm text-muted">El ciclo va de luna nueva a luna llena. Cinco sellos completan el ciclo: la sexta hamburguesa es gratis.</p>
+          </div>
+          <div class="panel panel-hover p-5">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">🎁</span>
+              <h3 class="font-cond text-lg font-600">Promos personalizadas</h3>
+            </div>
+            <p class="mt-2 text-sm text-muted">Como sabemos qué pedís, te avisamos promos relámpago de madrugada que de verdad te interesan. Nada de spam.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Beneficios extra -->
+      <div class="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <!-- Hora Lunática -->
+        <div x-data="lunatic" x-init="init()" class="panel panel-hover flex flex-col p-6">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-3xl">🌗</span>
+            <span class="flex items-center gap-2 text-xs">
+              <span class="dot-live" :class="active ? 'dot-on' : 'dot-off'"></span>
+              <span x-text="active ? 'Activa ahora' : 'En pausa'" :class="active ? 'text-[#2ec27a]' : 'text-muted'"></span>
+            </span>
+          </div>
+          <h3 class="font-cond text-lg font-700">Hora Lunática</h3>
+          <p class="mt-2 flex-1 text-sm text-muted">20% OFF en todo el menú, todas las noches después de medianoche.</p>
+          <p class="mt-4 font-cond tabular-nums text-2xl text-yellow-soft" x-text="time"></p>
+          <p class="text-xs text-muted" x-text="active ? '¡Aprovechá, está activa!' : 'Se activa a las 00:00'"></p>
+        </div>
+
+        <!-- VIP Desvelado -->
+        <div class="panel panel-hover flex flex-col p-6">
+          <span class="mb-3 text-3xl">👑</span>
+          <h3 class="font-cond text-lg font-700">VIP Desvelado</h3>
+          <p class="mt-2 flex-1 text-sm text-muted">Membresía mensual baja: una bebida gratis por visita y prioridad en el pre-pedido. Tu lugar en la fila, asegurado.</p>
+          <span class="mt-4 chip self-start bg-violet/15 text-violet">Próximamente</span>
+        </div>
+
+        <!-- Cumpleaños -->
+        <div class="panel panel-hover flex flex-col p-6">
+          <span class="mb-3 text-3xl">🎂</span>
+          <h3 class="font-cond text-lg font-700">Burger de cumpleaños</h3>
+          <p class="mt-2 flex-1 text-sm text-muted">En tu semana de cumpleaños, una hamburguesa va de regalo. Porque cumplir años de madrugada también se festeja.</p>
+          <span class="mt-4 chip self-start bg-yellow/15 text-yellow-soft">Para socios</span>
+        </div>
+
+        <!-- Comunidad -->
+        <div class="panel panel-hover flex flex-col p-6">
+          <span class="mb-3 text-3xl">📸</span>
+          <h3 class="font-cond text-lg font-700">La comunidad</h3>
+          <p class="mt-2 flex-1 text-sm text-muted">Contenido nocturno en Instagram y TikTok, y un grupo donde avisamos las promos relámpago de madrugada antes que nadie.</p>
+          <div class="mt-4 flex gap-3 text-sm">
+            <a href="#" class="text-violet hover:text-yellow-soft">Instagram</a>
+            <a href="#" class="text-violet hover:text-yellow-soft">TikTok</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EL RETO / MURO ===================== -->
+  <section id="reto" class="relative z-10 mx-auto max-w-6xl px-5 py-20 lg:px-8 lg:py-28">
+    <div class="loyalty-card overflow-hidden">
+      <div class="grid lg:grid-cols-2">
+        <!-- Texto del reto -->
+        <div class="p-8 sm:p-12">
+          <p class="section-kicker">El desafío</p>
+          <h2 class="mt-3 font-display text-4xl sm:text-5xl"><span class="neon-soft">EL MURO DE LOS<br>DESVELADOS</span></h2>
+          <p class="mt-5 text-muted">
+            ¿Te animás a terminar <span class="text-yellow-soft font-600">La Luna Llena</span> —triple carne, tres quesos y aros de cebolla adentro— en
+            <span class="text-yellow-soft font-600">menos de 5 minutos</span>?
+          </p>
+          <ul class="mt-6 space-y-2 text-sm text-muted">
+            <li class="flex items-start gap-2"><span class="text-yellow">🏆</span> Si lo lográs, <span class="text-yellow-soft">va gratis</span>.</li>
+            <li class="flex items-start gap-2"><span class="text-yellow">🌕</span> Tu nombre queda grabado en el Muro.</li>
+            <li class="flex items-start gap-2"><span class="text-yellow">🎁</span> Te llevás un combo de regalo.</li>
+          </ul>
+          <a href="https://wa.me/5491112345678?text=Quiero%20intentar%20el%20reto%20de%20La%20Luna%20Llena"
+             target="_blank" rel="noopener" class="btn btn-neon mt-8">Aceptar el reto</a>
+        </div>
+
+        <!-- Tabla del muro -->
+        <div class="border-t border-yellow/10 bg-ink/40 p-8 sm:p-12 lg:border-l lg:border-t-0">
+          <p class="mb-5 font-cond text-sm uppercase tracking-widest text-violet">🏆 Hall of Fame · este mes</p>
+          <ol class="space-y-3">
+            <li class="flex items-center justify-between border-b border-white/5 pb-3">
+              <span class="flex items-center gap-3"><span class="font-display text-xl text-yellow">1</span> <span class="font-cond">Sofi "La Loba"</span></span>
+              <span class="font-cond tabular-nums text-yellow-soft">3:42</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-white/5 pb-3">
+              <span class="flex items-center gap-3"><span class="font-display text-xl text-muted">2</span> <span class="font-cond">Tincho_PM</span></span>
+              <span class="font-cond tabular-nums text-yellow-soft">4:18</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-white/5 pb-3">
+              <span class="flex items-center gap-3"><span class="font-display text-xl text-muted">3</span> <span class="font-cond">El Repartidor 24h</span></span>
+              <span class="font-cond tabular-nums text-yellow-soft">4:33</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-white/5 pb-3">
+              <span class="flex items-center gap-3"><span class="font-display text-xl text-muted">4</span> <span class="font-cond">Naty &amp; Co.</span></span>
+              <span class="font-cond tabular-nums text-yellow-soft">4:51</span>
+            </li>
+            <li class="flex items-center justify-between">
+              <span class="flex items-center gap-3"><span class="font-display text-xl text-muted">5</span> <span class="font-cond">Gamer_3AM</span></span>
+              <span class="font-cond tabular-nums text-yellow-soft">4:58</span>
+            </li>
+          </ol>
+          <p class="mt-6 text-xs text-muted">* Tiempos verificados por el equipo de despacho. El próximo lugar puede ser tuyo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DÓNDE ESTAMOS ===================== -->
+  <section id="donde" class="relative z-10 border-t border-yellow/10 bg-night/40 py-20 lg:py-28">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="mb-12 text-center">
+        <p class="section-kicker">Dónde estamos</p>
+        <h2 class="mt-3 font-display text-4xl sm:text-5xl lg:text-6xl"><span class="neon-soft">VENÍ A LA NOCHE</span></h2>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-2 lg:items-stretch">
+        <!-- Info -->
+        <div class="space-y-5">
+          <div class="panel p-6">
+            <h3 class="flex items-center gap-2 font-cond text-lg font-700"><span>📍</span> Dirección</h3>
+            <p class="mt-2 text-muted">Av. Corrientes 1234, CABA<br>Buenos Aires, Argentina</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=Av.+Corrientes+1234+Buenos+Aires"
+               target="_blank" rel="noopener" class="btn btn-ghost mt-4 text-sm">
+              <span>🗺️</span> Abrir en Google Maps
+            </a>
+          </div>
+          <div class="panel p-6">
+            <h3 class="flex items-center gap-2 font-cond text-lg font-700"><span>🕗</span> Horario</h3>
+            <p class="mt-2 text-muted">Todos los días · <span class="text-yellow-soft">20:00 a 04:00</span></p>
+            <p class="mt-1 text-sm text-muted">Hora Lunática (20% OFF) desde las 00:00.</p>
+          </div>
+          <div class="panel p-6">
+            <h3 class="flex items-center gap-2 font-cond text-lg font-700"><span>📲</span> Pedí sin esperar</h3>
+            <p class="mt-2 text-muted">Pre-pedí por WhatsApp y retirá sin hacer fila.</p>
+            <a href="https://wa.me/5491112345678?text=Hola!%20Quiero%20hacer%20un%20pre-pedido"
+               target="_blank" rel="noopener" class="btn btn-wa mt-4 text-sm">📲 +54 9 11 1234-5678</a>
+          </div>
+        </div>
+
+        <!-- Mapa (con fallback por si el iframe no carga) -->
+        <div class="panel relative overflow-hidden p-0">
+          <!-- Fallback detrás del iframe: si el mapa carga, lo tapa -->
+          <div class="absolute inset-0 z-0 grid place-items-center bg-night text-center">
+            <div>
+              <p class="text-4xl">📍</p>
+              <p class="mt-2 font-cond text-lg text-yellow-soft">Av. Corrientes 1234, CABA</p>
+              <a href="https://www.google.com/maps/search/?api=1&query=Av.+Corrientes+1234+Buenos+Aires"
+                 target="_blank" rel="noopener" class="btn btn-ghost mt-4 text-sm">🗺️ Ver en Google Maps</a>
+            </div>
+          </div>
+          <iframe
+            title="Ubicación de La Madruguesa en Google Maps"
+            class="relative z-10 h-full min-h-[360px] w-full"
+            style="border:0; filter: grayscale(0.4) contrast(1.05) brightness(0.85);"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Av.+Corrientes+1234,+Buenos+Aires&output=embed">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="relative z-10 border-t border-yellow/10 py-14">
+    <div class="mx-auto max-w-6xl px-5 lg:px-8">
+      <div class="flex flex-col items-center gap-6 text-center">
+        <a href="#inicio" class="flex items-center gap-2">
+          <span class="text-2xl">🌙</span>
+          <span class="font-display text-2xl neon-soft">LA MADRUGUESA</span>
+        </a>
+        <p class="text-sm text-muted">El antojo no duerme · Abierto 20:00 — 04:00, todos los días</p>
+        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted">
+          <a href="#menu" class="hover:text-yellow-soft">Menú</a>
+          <a href="#club" class="hover:text-yellow-soft">Club de los Desvelados</a>
+          <a href="#reto" class="hover:text-yellow-soft">El Reto</a>
+          <a href="#donde" class="hover:text-yellow-soft">Dónde estamos</a>
+          <a href="https://wa.me/5491112345678" target="_blank" rel="noopener" class="hover:text-yellow-soft">WhatsApp</a>
+        </div>
+        <div class="flex gap-4 text-sm text-violet">
+          <a href="#" class="hover:text-yellow-soft">Instagram</a>
+          <a href="#" class="hover:text-yellow-soft">TikTok</a>
+        </div>
+        <p class="text-xs text-muted/60">© 2026 La Madruguesa · Prototipo de sitio · Hecho para los que no duermen.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Oculta elementos x-cloak hasta que Alpine inicializa -->
+  <style>[x-cloak]{ display:none !important; }</style>
+</body>
+</html>
